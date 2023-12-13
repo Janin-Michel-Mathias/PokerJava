@@ -30,8 +30,8 @@ public class HandRank {
                     if(pairNumber == 0){
                         pairNumber = cards.get(i).getNumber();
                         pairCount++;
-                    } else if (cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j) {
-
+                    } else if (pairNumber != cards.get(i).getNumber()) {
+                        hand.setHigherRank(2);
                     }
                 }
             }

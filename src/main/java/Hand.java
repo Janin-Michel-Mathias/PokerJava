@@ -10,7 +10,7 @@ public class Hand {
         for(int i = 0; i < 5; i++) {
             cards.add(deck.getoneCard());
         }
-        getHigherCard();
+        setHigherCard();
     }
 
     public List<Card> getHand() {
@@ -21,7 +21,7 @@ public class Hand {
         this.rank = rank;
     }
 
-    private void getHigherCard(){
+    private void setHigherCard(){
         higherCard = cards.get(0);
         if(higherCard.getNumber() == 1){
             this.higherCard = higherCard;
@@ -39,5 +39,11 @@ public class Hand {
         }
     }
 
-    public Card getHigherCa
+    public Card getHigherCard(int i) {
+        return higherCard;
+    }
+
+    public int getRank() {
+        return rank;
+    }
 }

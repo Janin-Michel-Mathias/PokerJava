@@ -1,6 +1,10 @@
+import java.util.List;
+
 public class CompareHands {
     //recois deux mains et retourne la meilleure, une hand est composé de son Ranks et de sa carte la plus haute
     public Hand compare(Hand hand1, Hand hand2) {
+        List<Card> cards = hand1.getHand();
+
         if (hand1.getRank() > hand2.getRank()) {
             return hand1;
         } else if (hand1.getRank() < hand2.getRank()) {
@@ -24,5 +28,6 @@ public class CompareHands {
                 }
             }
         }
+        return null;
     }
 }
