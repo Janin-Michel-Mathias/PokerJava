@@ -6,8 +6,12 @@ public class Hand {
 
     Hand(Deck deck) {
         for(int i = 0; i < 5; i++) {
-            cards;deck.getoneCard();
+            cards.add(deck.getoneCard());
         }
+    }
+
+    public List<Card> getHand() {
+        return cards;
     }
 
 }
