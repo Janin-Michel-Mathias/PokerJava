@@ -13,6 +13,10 @@ public class Deck {
         }
     }
 
+    Deck(List<Card> deck) {
+        this.deck = deck;
+    }
+
     public Card getoneCard() {
         int index = (int) (Math.random() * 52);
         Card card = deck.get(index);

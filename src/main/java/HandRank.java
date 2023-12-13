@@ -1,24 +1,42 @@
+import java.util.HashMap;
 import java.util.List;
 
 public class HandRank {
 
-
-    // High Card
-    public static highCard(Hand hand){
+    // Pair
+    public void isPair(Hand hand){
         List<Card> cards = hand.getHand();
-        for (int i = 0; i < 5; i++) {
+        int highestRank = 0;
 
+        for (int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                if(cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j){
+                    hand.setHigherRank(1);
+                }
+            }
         }
     }
 
-    // Pair
-
-    public static pair(Hand hand) {
+    // Two Pain
+    public void isTwoPair(Hand hand){
         List<Card> cards = hand.getHand();
-        
-    }
+        int highestRank = 0;
+        int pairCount = 0;
+        int pairNumber = 0;
 
-    // Two Pair
+        for (int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                if(cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j){
+                    if(pairNumber == 0){
+                        pairNumber = cards.get(i).getNumber();
+                        pairCount++;
+                    } else if (cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j) {
+
+                    }
+                }
+            }
+        }
+    }
 
     // Three of a kind
 
