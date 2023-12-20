@@ -12,85 +12,63 @@ public class HandRank {
     public static final int FOUR_OF_A_KIND = 7;
     public static final int STRAIGHT_FLUSH = 8;
 
-    // Pair
-    private static void isPair(Hand hand){
-        List<Card> cards = hand.getHand();
-        int highestRank = 0;
+    private static int[] countNumbers(Hand hand) {
+        int[] numbers = new int[14];
+        for(int i = 0; i < 14; i++) {
+            numbers[i] = 0;
+        }
+        for(int i = 0; i < 5; i++) {
+            numbers[hand.getHand().get(i).getNumber()]++;
+        }
+        return numbers;
+    }
 
-        for (int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
-                if(cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j){
-                    hand.setHigherRank(PAIR);
-                }
+    // Pair
+    private static void isPair(Hand hand, int[] counts){
+        for(int i = 0; i < 14; i++) {
+            if(counts[i] == 2) {
+                hand.setHigherRank(PAIR);
+                break;
             }
         }
     }
 
     // Two Pain
-    private static void isTwoPair(Hand hand){
-        List<Card> cards = hand.getHand();
-        int highestRank = 0;
-        int pairCount = 0;
-        int pairNumber = 0;
-
-        for (int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
-                if(cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j){
-                    if(pairNumber == 0){
-                        pairNumber = cards.get(i).getNumber();
-                        pairCount++;
-                    } else if (pairNumber != cards.get(i).getNumber()) {
-                        hand.setHigherRank(TWO_PAIR);
-                    }
-                }
+    private static void isTwoPair(Hand hand, int[] counts){
+        boolean firstPair = false;
+        for(int i = 0; i < 14; i++) {
+            if(!firstPair && counts[i] == 2) {
+                firstPair = true;
+            } else if(counts[i] == 2) {
+                hand.setHigherRank(TWO_PAIR);
+                break;
             }
         }
     }
 
     // Three of a kind
 
-    private static void isThreeOfAKind(Hand hand) {
-        List<Card> cards = hand.getHand();
-
-        for(int i = 0; i < 5; i++) {
-            for(int j = 0; j < 5; j++) {
-                for(int k = 0; k < 5; k++) {
-                    if(cards.get(i).getNumber() == cards.get(j).getNumber() && cards.get(k).getNumber() == cards.get(j).getNumber() && i != j && k != j && i != k) {
-                        hand.setHigherRank(THREE_OF_A_KIND);
-                    }
-                }
+    private static void isThreeOfAKind(Hand hand, int[] counts) {
+        for(int i = 0; i < 14; i++) {
+            if(counts[i] == 3) {
+                hand.setHigherRank(THREE_OF_A_KIND);
+                break;
             }
         }
     }
 
     // Straight
 
-    private static void isStraight(Hand hand) {
-        List<Card> cards = hand.getHand();
-        boolean start = false;
-        boolean straight = true;
-        int rank = 0;
+    private static void isStraight(Hand hand, int[] counts) {
         for(int i = 1; i < 14; i++) {
-            boolean in = false;
-            for(int j = 0; j < 5; j++) {
-                if (cards.get(j).getNumber() == i % 13 + 1) {
-                    in = true;
-                    break;
+            if(counts[i%13 + 1] == 1) {
+                for(int j = i; j < i + 5; j++) {
+                    if(counts[j%13 + 1] != 1)return;
                 }
-            }
-            if(!start && in){
-                start = true;
-                rank++;
-            }
-            else if(rank > 4) break;
-            else if(start && !in) {
-                straight = false;
-                break;
-            } else if(in){
-                rank++;
+                hand.setHigherRank(STRAIGHT);
+                return;
             }
         }
-        if(straight) hand.setHigherRank(STRAIGHT);
     }
 
     // Flush
@@ -112,92 +90,51 @@ public class HandRank {
 
     // Full house
 
-    private static void isFullHouse(Hand hand) {
-        List<Card> cards = hand.getHand();
-
-        int threeNumber = -1;
-
-        for(int i = 0; i < 5; i++) {
-            for(int j = 0; j < 5; j++) {
-                for(int k = 0; k < 5; k++) {
-                    if(cards.get(i).getNumber() == cards.get(j).getNumber() && cards.get(k).getNumber() == cards.get(j).getNumber() && i != j && k != j && i != k) {
-                        threeNumber = cards.get(i).getNumber();
-                    }
-                }
-            }
+    private static void isFullHouse(Hand hand, int[] counts) {
+        boolean three = false;
+        boolean pair = false;
+        for(int i = 0; i < 14; i++) {
+            if(counts[i] == 3)three = true;
+            if(counts[i] == 2)pair = true;
         }
-
-        if(threeNumber == -1) return;
-
-        for(int i = 0; i < 5; i++) {
-            for(int j = 0; j < 5; j++) {
-                if(cards.get(i).getNumber() == cards.get(j).getNumber() && j!=i && cards.get(i).getNumber() != threeNumber) {
-                    hand.setHigherRank(FULL_HOUSE);
-                }
-            }
-        }
+        if(three && pair) hand.setHigherRank(FULL_HOUSE);
     }
 
     // Four of a kind
 
-    private static void isFourOfAKind(Hand hand) {
-        List<Card> cards = hand.getHand();
-
-        for(int i = 0; i < 5; i++) {
-            for(int j = 0; j < 5; j++) {
-                for(int k = 0; k < 5; k++) {
-                    for(int l = 0; l < 5; l++) {
-                        if(cards.get(i).getNumber() == cards.get(j).getNumber() && cards.get(k).getNumber() == cards.get(j).getNumber() && cards.get(l).getNumber() == cards.get(j).getNumber() && i != j && k != j && l != j && i != k && l != i && k != l) {
-                            hand.setHigherRank(FOUR_OF_A_KIND);
-                        }
-                    }
-                }
-            }
+    private static void isFourOfAKind(Hand hand, int[] counts) {
+        for(int i = 0; i < 14; i++) {
+            if(counts[i] == 4) hand.setHigherRank(FOUR_OF_A_KIND);
         }
     }
 
     // Straight Flush
 
-    private static void isStraightFlush(Hand hand) {
-        List<Card> cards = hand.getHand();
-        boolean start = false;
-        boolean straight = true;
-        boolean flush = true;
-        String color = cards.get(0).getColor();
-        int rank = 0;
+    private static void isStraightFlush(Hand hand, int[] counts) {
+        String color = hand.getHand().get(0).getColor();
+        for(int i = 0; i < 5; i++) {
+            if(!hand.getHand().get(i).getColor().equals(color))return;
+        }
         for(int i = 1; i < 14; i++) {
-            boolean in = false;
-            for(int j = 0; j < 5; j++) {
-                if (cards.get(j).getNumber() == i % 13 + 1) {
-                    if(!cards.get(j).getColor().equals(color)) flush = false;
-                    in = true;
-                    break;
+            if(counts[i%13 + 1] == 1) {
+                for(int j = i; j < i + 5; j++) {
+                    if(counts[j%13 + 1] != 1)return;
                 }
-            }
-            if(!start && in){
-                start = true;
-                rank++;
-            }
-            else if(rank > 4) break;
-            else if(start && !in) {
-                straight = false;
-                break;
-            } else if (in){
-                rank++;
+                hand.setHigherRank(STRAIGHT_FLUSH);
             }
         }
-        if(straight && flush) hand.setHigherRank(STRAIGHT_FLUSH);
     }
 
     public static void setHandRank(Hand hand) {
+        int[] counts = countNumbers(hand);
         hand.setHigherRank(HIGH_CARD);
-        isPair(hand);
-        isTwoPair(hand);
-        isThreeOfAKind(hand);
-        isStraight(hand);
+        isPair(hand, counts);
+        isTwoPair(hand, counts);
+        isThreeOfAKind(hand, counts);
+        isStraight(hand, counts);
         isFlush(hand);
-        isFullHouse(hand);
-        isFourOfAKind(hand);
-        isStraightFlush(hand);
+        isFullHouse(hand, counts);
+        isFourOfAKind(hand, counts);
+        isStraightFlush(hand, counts);
     }
 }
