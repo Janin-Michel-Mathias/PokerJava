@@ -2,6 +2,16 @@ import java.util.List;
 
 public class HandRank {
 
+    public static final int HIGH_CARD = 0;
+    public static final int PAIR = 1;
+    public static final int TWO_PAIR = 2;
+    public static final int THREE_OF_A_KIND = 3;
+    public static final int STRAIGHT = 4;
+    public static final int FLUSH = 5;
+    public static final int FULL_HOUSE = 6;
+    public static final int FOUR_OF_A_KIND = 7;
+    public static final int STRAIGHT_FLUSH = 8;
+
     // Pair
     private static void isPair(Hand hand){
         List<Card> cards = hand.getHand();
@@ -10,7 +20,7 @@ public class HandRank {
         for (int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 if(cards.get(i).getNumber() == cards.get(j).getNumber() && i!=j){
-                    hand.setHigherRank(1);
+                    hand.setHigherRank(PAIR);
                 }
             }
         }
@@ -30,7 +40,7 @@ public class HandRank {
                         pairNumber = cards.get(i).getNumber();
                         pairCount++;
                     } else if (pairNumber != cards.get(i).getNumber()) {
-                        hand.setHigherRank(2);
+                        hand.setHigherRank(TWO_PAIR);
                     }
                 }
             }
@@ -46,7 +56,7 @@ public class HandRank {
             for(int j = 0; j < 5; j++) {
                 for(int k = 0; k < 5; k++) {
                     if(cards.get(i).getNumber() == cards.get(j).getNumber() && cards.get(k).getNumber() == cards.get(j).getNumber() && i != j && k != j && i != k) {
-                        hand.setHigherRank(3);
+                        hand.setHigherRank(THREE_OF_A_KIND);
                     }
                 }
             }
@@ -80,7 +90,7 @@ public class HandRank {
                 rank++;
             }
         }
-        if(straight) hand.setHigherRank(4);
+        if(straight) hand.setHigherRank(STRAIGHT);
     }
 
     // Flush
@@ -96,7 +106,7 @@ public class HandRank {
             }
         }
         if(flush){
-            hand.setHigherRank(5);
+            hand.setHigherRank(FLUSH);
         }
     }
 
@@ -122,7 +132,7 @@ public class HandRank {
         for(int i = 0; i < 5; i++) {
             for(int j = 0; j < 5; j++) {
                 if(cards.get(i).getNumber() == cards.get(j).getNumber() && j!=i && cards.get(i).getNumber() != threeNumber) {
-                    hand.setHigherRank(6);
+                    hand.setHigherRank(FULL_HOUSE);
                 }
             }
         }
@@ -138,7 +148,7 @@ public class HandRank {
                 for(int k = 0; k < 5; k++) {
                     for(int l = 0; l < 5; l++) {
                         if(cards.get(i).getNumber() == cards.get(j).getNumber() && cards.get(k).getNumber() == cards.get(j).getNumber() && cards.get(l).getNumber() == cards.get(j).getNumber() && i != j && k != j && l != j && i != k && l != i && k != l) {
-                            hand.setHigherRank(7);
+                            hand.setHigherRank(FOUR_OF_A_KIND);
                         }
                     }
                 }
@@ -176,11 +186,11 @@ public class HandRank {
                 rank++;
             }
         }
-        if(straight && flush) hand.setHigherRank(8);
+        if(straight && flush) hand.setHigherRank(STRAIGHT_FLUSH);
     }
 
     public static void setHandRank(Hand hand) {
-        hand.setHigherRank(0);
+        hand.setHigherRank(HIGH_CARD);
         isPair(hand);
         isTwoPair(hand);
         isThreeOfAKind(hand);

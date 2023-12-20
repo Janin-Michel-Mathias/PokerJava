@@ -30,34 +30,6 @@ public class PokerTest {
     }
 
     @Test
-    public void getHighCardAce() {
-        List<Card> deckCards = new ArrayList<>();
-
-        for(int i = 2; i < 6; i++ ) {
-            deckCards.add(new Card(i, "S"));
-        }
-        Card higherCard = new Card(1, "S");
-        deckCards.add(higherCard);
-        Deck d = new Deck(deckCards);
-        Hand h = new Hand(d);
-        assertEquals(h.getHigherCard(0), higherCard);
-    }
-
-    @Test
-    public void getHighCard() {
-        List<Card> deckCards = new ArrayList<>();
-
-        for(int i = 2; i < 6; i++ ) {
-            deckCards.add(new Card(i, "S"));
-        }
-        Card higherCard = new Card(7, "S");
-        deckCards.add(higherCard);
-        Deck d = new Deck(deckCards);
-        Hand h = new Hand(d);
-        assertEquals(h.getHigherCard(0), higherCard);
-    }
-
-    @Test
     public void highCard() {
         Card c = new Card(1, "S");
         assertEquals(c.getColor(), "S");
@@ -73,7 +45,7 @@ public class PokerTest {
         deckCards.add(new Card(6, "D"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 0);
+        assertEquals(h.getRank(), HandRank.HIGH_CARD);
     }
 
     @Test
@@ -86,7 +58,7 @@ public class PokerTest {
         deckCards.add(new Card(1, "D"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 1);
+        assertEquals(h.getRank(), HandRank.PAIR);
     }
 
     @Test
@@ -100,7 +72,7 @@ public class PokerTest {
         deckCards.add(new Card(2, "D"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 2);
+        assertEquals(h.getRank(), HandRank.TWO_PAIR);
     }
 
     @Test
@@ -114,7 +86,7 @@ public class PokerTest {
         deckCards.add(new Card(1, "H"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 3);
+        assertEquals(h.getRank(), HandRank.THREE_OF_A_KIND);
     }
 
     @Test
@@ -127,7 +99,7 @@ public class PokerTest {
         deckCards.add(new Card(6, "D"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 4);
+        assertEquals(h.getRank(), HandRank.STRAIGHT);
     }
 
     @Test
@@ -141,7 +113,7 @@ public class PokerTest {
         deckCards.add(new Card(7, "S"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 5);
+        assertEquals(h.getRank(), HandRank.FLUSH);
     }
 
     @Test
@@ -155,7 +127,7 @@ public class PokerTest {
         deckCards.add(new Card(2, "S"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 6);
+        assertEquals(h.getRank(), HandRank.FULL_HOUSE);
     }
 
     @Test
@@ -169,7 +141,7 @@ public class PokerTest {
         deckCards.add(new Card(2, "S"));
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 7);
+        assertEquals(h.getRank(), HandRank.FOUR_OF_A_KIND);
     }
 
     @Test
@@ -180,7 +152,65 @@ public class PokerTest {
         }
         Deck d = new Deck(deckCards);
         Hand h = new Hand(d);
-        assertEquals(h.getRank(), 8);
+        assertEquals(h.getRank(), HandRank.STRAIGHT_FLUSH);
+    }
+
+    @Test
+    public void compareHandsEquality() {
+        List<Card> deckCards = new ArrayList<>();
+        List<Card> deckCards2 = new ArrayList<>();
+        for(int i = 1; i < 6; i++) {
+            deckCards.add(new Card(i+1, "S"));
+        }
+
+        for(int i = 1; i < 6; i++) {
+            deckCards2.add(new Card(i+1, "D"));
+        }
+        Deck d = new Deck(deckCards);
+        Deck d2 = new Deck(deckCards2);
+        Hand h = new Hand(d);
+        Hand h2 = new Hand(d2);
+        assertEquals(CompareHands.compare(h, h2), null);
+    }
+
+    @Test
+    public void compareHandsDifferentRanks() {
+        List<Card> deckCards = new ArrayList<>();
+        List<Card> deckCards2 = new ArrayList<>();
+        for(int i = 1; i < 6; i++) {
+            deckCards.add(new Card(i+1, "S"));
+        }
+
+        for(int i = 1; i < 5; i++) {
+            deckCards2.add(new Card(i+1, "D"));
+        }
+        deckCards2.add(new Card(2, "C"));
+        Deck d = new Deck(deckCards);
+        Deck d2 = new Deck(deckCards2);
+        Hand h = new Hand(d);
+        Hand h2 = new Hand(d2);
+
+        assertEquals(CompareHands.compare(h, h2), h);
+    }
+
+    @Test
+    public void compareHandsSameRanksNoEquality() {
+        List<Card> deckCards = new ArrayList<>();
+        List<Card> deckCards2 = new ArrayList<>();
+        for(int i = 1; i < 6; i++) {
+            deckCards.add(new Card(i+1, "S"));
+        }
+
+        for(int i = 2; i < 7; i++) {
+            deckCards2.add(new Card(i+1, "D"));
+        }
+
+        Deck d = new Deck(deckCards);
+        Deck d2 = new Deck(deckCards2);
+        Hand h = new Hand(d);
+        Hand h2 = new Hand(d2);
+
+        assertEquals(CompareHands.compare(h, h2), h2);
     }
 
 
