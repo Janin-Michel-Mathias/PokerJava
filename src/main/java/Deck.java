@@ -18,7 +18,6 @@ public class Deck {
     }
 
     public Card getoneCard() {
-        System.out.println("carte : " + deck.size());
         int index = (int) (Math.random() * deck.size());
         Card card = deck.get(index);
         deck.remove(index);

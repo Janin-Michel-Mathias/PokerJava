@@ -11,6 +11,7 @@ public class Hand {
             cards.add(deck.getoneCard());
         }
         setHigherCard();
+        HandRank.setHandRank(this);
     }
 
     public List<Card> getHand() {
